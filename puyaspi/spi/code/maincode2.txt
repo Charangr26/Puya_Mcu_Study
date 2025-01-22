@@ -1,0 +1,58 @@
+#include "spi.h"
+#include "uart.h"
+
+// Define the W25Q128 commands
+#define W25Q128_CMD_READ_ID  0x9F  // Command to read the ID
+
+// Function prototypes
+void UART_sendString(const char* str);
+void UART_sendHex(uint8_t value);
+uint8_t W25Q128_ReadID(void);
+
+// Function to send a string via UART
+void UART_sendString(const char* str) {
+    while (*str) {
+        UART_write(*str++);
+    }
+}
+
+// Function to send a byte as hex via UART
+void UART_sendHex(uint8_t value) {
+    const char hexDigits[] = "0123456789ABCDEF";
+    UART_write(hexDigits[(value >> 4) & 0x0F]);  // Send high nibble
+    UART_write(hexDigits[value & 0x0F]);         // Send low nibble
+}
+
+// Function to read the W25Q128 ID
+uint8_t W25Q128_ReadID(void) {
+    uint8_t id = 0;
+
+    SPI_enable();           // Pull CS low to start communication
+    SPI_write(W25Q128_CMD_READ_ID);  // Send the command to read ID
+    id = SPI_read();        // Read the first byte of the ID
+    SPI_disable();          // Pull CS high to end communication
+
+    return id;
+}
+
+int main(void) {
+    // Initialize SPI and UART
+    SPI_init();
+    UART_init();
+
+    // Debug message to check if the program is running
+    UART_sendString("Program started\r\n");
+
+    // Read and print the W25Q128 ID
+    uint8_t id = W25Q128_ReadID();
+    UART_sendString("W25Q128 ID: ");
+    UART_sendHex(id);  // Print the ID in hex
+    UART_sendString("\r\n");
+
+    // Main loop
+    while (1) {
+        // Continuously loop
+    }
+
+    return 0;
+}

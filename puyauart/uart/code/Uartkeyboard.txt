@@ -1,0 +1,20 @@
+#include "uart.h"
+
+int main(void) {
+    UART_init();
+    while (1) {
+        // Your main loop code
+        // Check if data is available to read
+        if (UART_available()) {
+            // Read a character from UART
+            char receivedChar = UART_read();
+            
+            // Echo the received character back via UART
+            UART_write(receivedChar);
+        }
+
+        // Alternatively, you can add code here to write data to UART
+        // UART_write('A');  // Example: Send character 'A'
+    }
+    return 0;
+}

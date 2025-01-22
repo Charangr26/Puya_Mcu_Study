@@ -1,0 +1,164 @@
+
+example.elf:     file format elf32-littlearm
+
+SYMBOL TABLE:
+08000000 l    d  .vectors	00000000 .vectors
+080000c0 l    d  .text	00000000 .text
+08000200 l    d  .rodata	00000000 .rodata
+08000200 l    d  .ARM.extab	00000000 .ARM.extab
+08000200 l    d  .ARM	00000000 .ARM
+08000200 l    d  .preinit_array	00000000 .preinit_array
+08000200 l    d  .init_array	00000000 .init_array
+08000204 l    d  .fini_array	00000000 .fini_array
+20000000 l    d  .data	00000000 .data
+20000000 l    d  .bss	00000000 .bss
+00000000 l    d  .ARM.attributes	00000000 .ARM.attributes
+00000000 l    d  .debug_info	00000000 .debug_info
+00000000 l    d  .debug_abbrev	00000000 .debug_abbrev
+00000000 l    d  .debug_loc	00000000 .debug_loc
+00000000 l    d  .debug_aranges	00000000 .debug_aranges
+00000000 l    d  .debug_ranges	00000000 .debug_ranges
+00000000 l    d  .debug_line	00000000 .debug_line
+00000000 l    d  .debug_str	00000000 .debug_str
+00000000 l    d  .comment	00000000 .comment
+00000000 l    d  .debug_frame	00000000 .debug_frame
+00000000 l    df *ABS*	00000000 
+00000000 l    df *ABS*	00000000 crtstuff.c
+080001e8 l     O .text	00000000 __EH_FRAME_BEGIN__
+080000c0 l     F .text	00000000 __do_global_dtors_aux
+20000000 l       .bss	00000001 completed.1
+08000204 l     O .fini_array	00000000 __do_global_dtors_aux_fini_array_entry
+080000e8 l     F .text	00000000 frame_dummy
+20000004 l       .bss	00000018 object.0
+08000200 l     O .init_array	00000000 __frame_dummy_init_array_entry
+00000000 l    df *ABS*	00000000 crti.o
+00000000 l    df *ABS*	00000000 crtn.o
+00000000 l    df *ABS*	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+000000e8 l       .debug_info	00000000 
+00000000 l    df *ABS*	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000373 l       .debug_info	00000000 
+00000000 l    df *ABS*	00000000 
+08000204 l       .init_array	00000000 __init_array_end
+08000200 l       .preinit_array	00000000 __preinit_array_end
+08000200 l       .init_array	00000000 __init_array_start
+08000200 l       .preinit_array	00000000 __preinit_array_start
+08000108 g     F .text	00000002 TIM1_CC_IRQHandler
+08000108 g     F .text	00000002 HardFault_Handler
+08000108 g     F .text	00000002 SysTick_Handler
+000000e8  w      .debug_info	00000000 .hidden example.c.536eca3d
+08000108 g     F .text	00000002 PVD_IRQHandler
+08000208 g       *ABS*	00000000 _sidata
+08000108 g     F .text	00000002 PendSV_Handler
+08000108 g     F .text	00000002 NMI_Handler
+08000200 g       .ARM	00000000 __exidx_end
+08000108 g     F .text	00000002 I2C1_IRQHandler
+08000200 g       .text	00000000 _etext
+20000000 g       .bss	00000000 _sbss
+20000000 g       .bss	00000000 __bss_start__
+20000000 g       .data	00000000 _sdata
+08000108 g     F .text	00000002 SPI1_IRQHandler
+08000200 g       .ARM	00000000 __exidx_start
+08000108 g     F .text	00000002 USART3_4_IRQHandler
+08000108 g     F .text	00000002 EXTI2_3_IRQHandler
+080001e8 g     F .text	00000000 _init
+08000108 g     F .text	00000002 I2C2_IRQHandler
+08000108 g     F .text	00000002 TIM17_IRQHandler
+08000108 g     F .text	00000002 RTC_IRQHandler
+2000001c g       .bss	00000000 _ebss
+0800010a g     F .text	00000076 Reset_Handler
+08000108 g     F .text	00000002 LED_IRQHandler
+08000108 g     F .text	00000002 LCD_IRQHandler
+00000373  w      .debug_info	00000000 .hidden system.c.6357af63
+08000108 g     F .text	00000002 DMA1_Channel4_5_6_7_IRQHandler
+08000108 g     F .text	00000002 TIM16_IRQHandler
+2000001c g       .bss	00000000 __bss_end__
+08000108 g     F .text	00000002 TIM3_IRQHandler
+08000108 g     F .text	00000002 EXTI4_15_IRQHandler
+08000108 g     F .text	00000002 RCC_IRQHandler
+08000108 g     F .text	00000002 DMA1_Channel1_IRQHandler
+08000108 g     F .text	00000002 Default_Handler
+08000108 g     F .text	00000002 TIM14_IRQHandler
+08000108 g     F .text	00000002 TIM7_IRQHandler
+08000108 g     F .text	00000002 TIM15_IRQHandler
+08000108 g     F .text	00000002 EXTI0_1_IRQHandler
+08000108 g     F .text	00000002 USB_IRQHandler
+08000108 g     F .text	00000002 SPI2_IRQHandler
+08000184 g     F .text	00000064 main
+08000108 g     F .text	00000002 SVC_Handler
+080001f4 g     F .text	00000000 _fini
+08000108 g     F .text	00000002 WWDG_IRQHandler
+08000108 g     F .text	00000002 TIM2_IRQHandler
+08000108 g     F .text	00000002 DMA1_Channel2_3_IRQHandler
+08000108 g     F .text	00000002 ADC_COMP_IRQHandler
+20000c00 g       .bss	00000000 _estack
+20000000 g       .data	00000000 _edata
+08000108 g     F .text	00000002 USART2_IRQHandler
+08000108 g     F .text	00000002 FLASH_IRQHandler
+08000000 g     O .vectors	000000c0 vectors
+08000108 g     F .text	00000002 USART1_IRQHandler
+08000108 g     F .text	00000002 TIM1_BRK_UP_TRG_COM_IRQHandler
+08000108 g     F .text	00000002 LPTIM1_IRQHandler
+
+

@@ -1,0 +1,47 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "cwd": "${workspaceFolder}",
+      "executable": "C:/Users/chara/D/PY32F0xx/template/example.elf",
+      "name": "JLink",
+      "request": "launch",
+      "type": "cortex-debug",
+      "device": "py32f030x8",
+      "runToEntryPoint": "main",
+      "showDevDebugOutput": "none",
+      "servertype": "jlink"
+    },
+    {
+      "cwd": "${workspaceRoot}",
+      "executable": "C:/Users/chara/D/PY32F0xx/template/example.elf",
+      "name": "OpenOCD",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "configFiles": [],
+      "searchDir": [],
+      "runToEntryPoint": "main",
+      "showDevDebugOutput": "none"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/chara/D/PY32F0xx/template",
+      "program": "c:/Users/chara/D/PY32F0xx/template/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}

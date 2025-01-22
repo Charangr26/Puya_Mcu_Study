@@ -1,0 +1,165 @@
+#include "i2c.h"       // Include your I2C driver
+#include "uart.h"      // Include your UART driver
+#include <stdint.h>
+#include <stdio.h>     // Include stdio for snprintf
+#include "gpio.h"
+#include "py32f0xx.h"
+
+// AHT21B sensor I2C address
+#define AHT21B_ADDRESS  0x38
+
+// AHT21B commands
+#define AHT21B_CMD_INIT  0xBE  // Changed from 0xE1 to 0xBE
+#define AHT21B_CMD_MEAS  0xAC
+#define AHT21B_CMD_RESET 0xBA
+
+void delay_ms(uint32_t ms);
+void AHT21B_Init(void);
+void AHT21B_TriggerMeasurement(void);
+void AHT21B_ReadData(float* temperature, float* humidity);
+
+// UART_SendString function declaration and definition
+void UART_SendString(const char *str) {
+    while (*str) {
+        // Use the correct function to send a character via UART
+        UART_write(*str++);
+    }
+}
+
+int main(void) {
+    // Initialize system and peripherals
+    UART_init(); // Initialize UART for communication
+    I2C_init();  // Initialize I2C
+
+    UART_SendString("Initializing AHT21B...\r\n");
+
+    // Initialize AHT21B sensor
+    AHT21B_Init();
+
+    float lastTemperature = 0;
+    float lastHumidity = 0;
+
+    while(1) {
+        float temperature = 0;
+        float humidity = 0;
+
+        // Trigger a measurement
+        AHT21B_TriggerMeasurement();
+
+        // Read temperature and humidity data
+        AHT21B_ReadData(&temperature, &humidity);
+
+        // Variables for integer and decimal parts
+        int tempInt = (int)(temperature);
+        int tempDec = (int)((temperature - tempInt) * 100);  // Get 2 decimal places
+        int humInt = (int)(humidity);
+        int humDec = (int)((humidity - humInt) * 100);  // Get 2 decimal places
+
+        // Only print if the values have changed
+        if (temperature != lastTemperature || humidity != lastHumidity) {
+            // Display the temperature and humidity
+            char buffer[64];
+            snprintf(buffer, sizeof(buffer), "Temperature: %d.%02d C, Humidity: %d.%02d %%\r\n",
+                     tempInt, tempDec, humInt, humDec);
+            UART_SendString(buffer);
+
+            // Update the last values
+            lastTemperature = temperature;
+            lastHumidity = humidity;
+        }
+
+        // Delay before the next measurement
+        delay_ms(3000);  // 3 seconds delay
+    }
+}
+
+void AHT21B_Init(void) {
+    uint8_t initCmd[] = {AHT21B_CMD_INIT, 0x08, 0x00};
+
+    // Send initialization command to AHT21B
+    I2C_start(AHT21B_ADDRESS << 1);  // Send the address with the write bit
+
+    // Send the init command bytes
+    for (int i = 0; i < sizeof(initCmd); i++) {
+        I2C_write(initCmd[i]); // No ACK check since I2C_write is void
+    }
+    I2C_stop();
+
+    delay_ms(500);  // Wait for the sensor to initialize
+    UART_SendString("AHT21B initialization command sent.\r\n");
+}
+
+void AHT21B_TriggerMeasurement(void) {
+    uint8_t measureCmd[] = {AHT21B_CMD_MEAS, 0x33, 0x00};
+
+    // Send measurement command to AHT21B
+    I2C_start(AHT21B_ADDRESS << 1);  // Send the address with the write bit
+
+    // Send the measurement command bytes
+    for (int i = 0; i < sizeof(measureCmd); i++) {
+        I2C_write(measureCmd[i]); // No ACK check since I2C_write is void
+    }
+    I2C_stop();
+
+    delay_ms(80);  // Measurement takes about 75 ms
+    UART_SendString("AHT21B measurement command sent.\r\n");
+}
+
+void AHT21B_ReadData(float* temperature, float* humidity) {
+    uint8_t data[6];
+
+    // Request data from AHT21B
+    I2C_start((AHT21B_ADDRESS << 1) | 1);  // Send the address with the read bit
+    for (int i = 0; i < 6; i++) {
+        data[i] = I2C_read(i < 5);  // Acknowledge all but the last byte
+    }
+    I2C_stop();
+
+    // Print the raw data for debugging
+    char buffer[64];
+    snprintf(buffer, sizeof(buffer), "Raw data: %02X %02X %02X %02X %02X %02X\r\n",
+             data[0], data[1], data[2], data[3], data[4], data[5]);
+    UART_SendString(buffer);
+
+    // Check for valid data
+    if ((data[0] & 0x80) == 0) {  // Check if the status byte indicates valid data
+        // Extract raw humidity (20 bits)
+        uint32_t rawHumidity = ((data[1] << 12) | (data[2] << 4) | (data[3] >> 4)) & 0xFFFFF;
+        
+        // Extract raw temperature (20 bits)
+        uint32_t rawTemperature = ((data[3] & 0x0F) << 16) | (data[4] << 8) | data[5];
+
+        // Calculate humidity and temperature
+        *humidity = ((float)rawHumidity / 1048576.0) * 100.0;   // 2^20 = 1048576
+        *temperature = ((float)rawTemperature / 1048576.0) * 200.0 - 50.0;
+
+        // Separate integer and decimal parts for temperature and humidity
+        int tempInt = (int)(*temperature);
+        int tempDec = (int)((*temperature - tempInt) * 100);  // Get 2 decimal places
+        int humInt = (int)(*humidity);
+        int humDec = (int)((*humidity - humInt) * 100);  // Get 2 decimal places
+
+        // Debugging output for processed data
+        snprintf(buffer, sizeof(buffer), "Processed Data - Temperature: %d.%02d, Humidity: %d.%02d\r\n",
+                 tempInt, tempDec, humInt, humDec);
+        UART_SendString(buffer);
+
+        // Display final temperature and humidity
+        snprintf(buffer, sizeof(buffer), "Temperature: %d.%02d C, Humidity: %d.%02d %%\r\n",
+                 tempInt, tempDec, humInt, humDec);
+        UART_SendString(buffer);  // Send final result to UART
+    } else {
+        *humidity = 0;
+        *temperature = 0;  // Reset to 0 if invalid data received
+        UART_SendString("Invalid data received!\r\n");
+    }
+}
+
+// Delay function (simple blocking)
+void delay_ms(uint32_t ms) {
+    for (uint32_t i = 0; i < ms; i++) {
+        for (uint32_t j = 0; j < 1000; j++) {
+            // Do nothing, simple delay
+        }
+    }
+}

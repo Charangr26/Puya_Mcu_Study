@@ -1,0 +1,100 @@
+#include "spi.h"
+#include "uart.h"
+#include "py32f0xx.h"
+#include "system.h"
+#include "gpio.h"
+
+// Define the CS pin
+#define CS_PIN PA4
+
+// Define the W25Q128 commands
+
+#define W25Q128_CMD_READ_MANUFACTURER_ID  0x90
+
+// Define the dummy bytes to read
+#define DUMMY_BYTE 0xFF
+
+// Function prototypes
+void UART_sendString(const char* str);
+void UART_sendHex(uint8_t value);
+void W25Q128_ReadManufacturerID(void);
+void delay_ms(uint32_t ms);  // Declare the delay function prototype
+
+// Function to send a string via UART
+void UART_sendString(const char* str) {
+    while (*str) {
+        UART_write(*str++);
+    }
+}
+
+// Function to send a byte as hex via UART
+void UART_sendHex(uint8_t value) {
+    const char hexDigits[] = "0123456789ABCDEF";
+    UART_write(hexDigits[(value >> 4) & 0x0F]);  // Send high nibble
+    UART_write(hexDigits[value & 0x0F]);         // Send low nibble
+}
+
+
+// Function to read JEDEC ID from W25Q128
+
+
+// Function to read Manufacturer/Device ID from W25Q128
+void W25Q128_ReadManufacturerID(void) {
+    uint8_t id[3];  // Buffer to hold the Manufacturer and Device ID
+
+    PIN_low(CS_PIN);                 // Pull CS low to start communication
+    delay_ms(100);
+
+    // Send the command to read Manufacturer/Device ID
+    SPI_write(W25Q128_CMD_READ_MANUFACTURER_ID);
+
+    // Send 2 dummy bytes
+    SPI_write(DUMMY_BYTE); // Dummy byte 1
+    SPI_write(DUMMY_BYTE); // Dummy byte 2
+
+    // Read the Manufacturer and Device ID (3 bytes)
+    for (int i = 0; i < 3; ++i) {
+        id[i] = SPI_read();
+    }
+
+    PIN_high(CS_PIN);              // Pull CS high to end communication
+
+    // Print the received ID via UART
+    UART_sendString("Manufacturer/Device ID: ");
+    for (int i = 0; i < 3; ++i) {
+        UART_sendHex(id[i]);
+        UART_sendString(" ");
+    }
+    UART_sendString("\r\n");
+}
+
+
+// Delay function
+void delay_ms(uint32_t ms) {
+    uint32_t delayCount = ms * 8000; // Assuming an 8 MHz clock
+    while (delayCount--) {
+        __asm("NOP"); // No operation (just consumes time)
+    }
+}
+
+int main(void) {
+    // Initialize SPI and UART
+    SPI_init();
+    UART_init();
+
+    // Debug message to check if the program is running
+    UART_sendString("Program started\r\n");
+
+  
+
+    // Read and print the Manufacturer/Device ID
+    UART_sendString("Reading W25Q128 Manufacturer/Device ID...\r\n");
+    W25Q128_ReadManufacturerID();
+
+    // Main loop
+    while (1) {
+        // Continuously loop
+    }
+
+    return 0;
+}
